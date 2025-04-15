@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Seleccionar Planeta</title>
+    <link rel="stylesheet" th:href="@{/style/styles.css}">
+    <style>
+		/* Estilo para el fondo y tipografía */
+		body {
+		    background-color: #0a0a2a;
+		    color: #ffffff;
+		    font-family: 'Orbitron', sans-serif;
+		    text-align: center;
+		}
+
+		/* Estilo del desplegable */
+		#planetSelect {
+		    background: rgba(15, 15, 45, 0.8); /* Fondo oscuro translúcido */
+		    color: #00c8ff; /* Azul eléctrico */
+		    border: 2px solid #00c8ff;
+		    padding: 10px;
+		    font-size: 16px;
+		    border-radius: 8px;
+		    outline: none;
+		    font-family: 'Orbitron', sans-serif;
+		    cursor: pointer;
+		    transition: 0.3s;
+		    text-align: center; /* Centra el texto */
+		    text-align-last: center; /* Centra en navegadores compatibles */
+		}
+
+		/* Efecto al pasar el mouse */
+		#planetSelect:hover {
+		    background: rgba(15, 15, 55, 0.9);
+		    box-shadow: 0 0 10px #00c8ff;
+		}
+
+		/* Botón estilizado */
+		button {
+		    background: linear-gradient(90deg, #00c8ff, #007bff);
+		    color: white;
+		    border: none;
+		    padding: 10px 20px;
+		    font-size: 16px;
+		    border-radius: 8px;
+		    cursor: pointer;
+		    font-family: 'Orbitron', sans-serif;
+		    transition: 0.3s;
+		    margin-top: 10px;
+		}
+
+		button:hover {
+		    background: linear-gradient(90deg, #007bff, #00c8ff);
+		    box-shadow: 0 0 15px #00c8ff;
+		}
+
+		/* Centrar el formulario */
+		form {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    margin-top: 20px;
+		}
+
+		/* Centrar el contenedor de la imagen */
+		#planetContainer {
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    margin-top: 30px;
+		    height: 300px;
+		}
+
+		/* Imagen del planeta */
+		#planetImage {
+		    display: none;
+		    max-width: 80%;
+		    max-height: 300px;
+		    border-radius: 15px;
+		    box-shadow: 0 0 20px rgba(0, 200, 255, 0.6);
+		}
+		/* Botón de Volver Atrás */
+		    #backButton {
+		        background: linear-gradient(90deg, #ffcc00, #ff8800);
+		        color: white;
+		        border: none;
+		        padding: 12px 24px;
+		        font-size: 18px;
+		        font-weight: bold;
+		        border-radius: 8px;
+		        cursor: pointer;
+		        font-family: 'Orbitron', sans-serif;
+		        transition: 0.3s;
+		        margin-top: 15px;
+		    }
+
+		    #backButton:hover {
+		        background: linear-gradient(90deg, #ff8800, #ff5500);
+		        box-shadow: 0 0 15px #ffcc00;
+		    }
+
+    </style>
+</head>
+<body>
+    <h1>Bienvenido [<span id="alias" th:text="${alias}"></span>]</h1>
+    <h2>Elige un planeta para unirte a una flota</h2>
+
+    <form action="/asignarFlota" method="post">
+        <select id="planetSelect" name="planeta">
+            <option value="">Selecciona un planeta</option>
+            <option value="la_tierra">La Tierra</option>
+            <option value="jupiter">Jupiter</option>
+            <option value="lobo_v">Lobo V</option>
+        </select>
+        <button type="submit">Unirme</button>
+    </form>
+
+    <!-- Imagen del planeta seleccionado -->
+	<!-- Contenedor para centrar la imagen -->
+	<!-- Contenedor para centrar la imagen -->
+	    <div id="planetContainer">
+	        <img id="planetImage" src="" alt="Imagen del planeta" />
+	    </div>
+
+		<!-- Texto que muestra la asignación de la flota -->
+		    <p id="fleetAssignment" style="display: none; font-size: 24px; font-weight: bold; margin-top: 15px;"></p>
+			<!-- Botón para volver atrás -->
+			<button id="backButton" onclick="window.history.back()">Volver Atrás</button>
+		    <script>
+		        document.addEventListener('DOMContentLoaded', function () {
+		            const planetSelect = document.getElementById('planetSelect');
+		            const planetImage = document.getElementById('planetImage');
+		            const fleetAssignment = document.getElementById('fleetAssignment');
+		            const aliasElement = document.getElementById('alias');
+
+		            // Función para asignar un color aleatorio al alias
+		            function generarColorAleatorio() {
+		                return '#' + Math.floor(Math.random() * 16777215).toString(16);
+		            }
+		            aliasElement.style.color = generarColorAleatorio();
+
+		            // Evento para cambiar la imagen y asignar la flota al seleccionar un planeta
+		            planetSelect.addEventListener('change', function () {
+		                const selectedPlanet = this.value;
+		                let fleetMessage = ""; // Variable para el mensaje de flota
+		                let fleetColor = ""; // Variable para el color de la flota
+
+		                if (selectedPlanet) {
+		                    const imageUrl = `/images/planetas/${selectedPlanet}.gif`;
+		                    
+		                    // Verificar si la imagen existe antes de mostrarla
+		                    fetch(imageUrl, { method: 'HEAD' })
+		                        .then(response => {
+		                            if (response.ok) {
+		                                planetImage.src = imageUrl;
+		                                planetImage.style.display = 'block';
+
+		                                // Determinar la flota asignada según el planeta
+		                                if (selectedPlanet === "la_tierra") {
+		                                    fleetMessage = "Flota <span style='color: #ffcc00;'>Alfa</span> asignada a La Tierra.";
+		                                } else if (selectedPlanet === "jupiter") {
+		                                    fleetMessage = "Flota <span style='color: #ff5733;'>Beta</span> asignada a Júpiter.";
+		                                } else if (selectedPlanet === "lobo_v") {
+		                                    fleetMessage = "Flota <span style='color: #33ff57;'>Gamma</span> asignada a Lobo V.";
+		                                }
+
+		                                // Mostrar mensaje de flota con formato
+		                                fleetAssignment.innerHTML = fleetMessage;
+		                                fleetAssignment.style.display = 'block';
+		                            } else {
+		                                throw new Error("Imagen no encontrada");
+		                            }
+		                        })
+		                        .catch(error => {
+		                            console.error("Error cargando imagen:", error);
+		                            planetImage.style.display = 'none';
+		                            fleetAssignment.style.display = 'none';
+		                        });
+		                } else {
+		                    planetImage.style.display = 'none';
+		                    fleetAssignment.style.display = 'none';
+		                }
+		            });
+		        });
+    </script>
+</body>
+</html>

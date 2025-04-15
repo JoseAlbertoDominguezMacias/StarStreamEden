@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <title>StarStream Eden</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style/styles.css}">
+</head>
+<body>
+    <header>
+		<span>Bienvenido a</span>
+        <h1>StarStream Eden</h1>
+        <nav>
+			<button id="registerButton" onclick="window.location.href='/register'">Regístrate</button>
+			<button id="accessButton" onclick="window.location.href='/login'">Inicia Sesión</button>
+        </nav>
+    </header>
+    <main>
+        <p>Explora el universo con nosotros.</p>
+		<p><img width="700" height="400" th:src="@{/images/opening.gif}" alt="opening"></p>
+        <button id="actionButton">Explorar</button>
+        <p id="message"></p>
+		
+    </main>
+	<footer>
+		        <div class="social-icons">
+					<a href="http://www.instagram.com/StarStreamEden" target="_blank"><i class="fa-brands fa-instagram"></i></a> <!-- Icono de Instagram -->
+		            <a href="http://www.facebook.com/StarStreamEden" target="_blank"><i class="fa-brands fa-facebook"></i></a> <!-- Icono de Facebook -->
+		            <a href="http://www.linkedin.com/StarStreamEden" target="_blank"><i class="fa-brands fa-linkedin"></i></a> <!-- Icono de Linkedin -->
+		        </div>
+		        <p>Copyright 2025 - @lp4elements</p>
+		    </footer>
+			<script th:src="@{/js/index.js}"></script>
+			<!-- Elemento de audio con el archivo de sonido y preload -->
+			    <audio id="trophySound" src="@{audio/positive-notification.wav}" preload="auto"></audio>
+
+			    <script>
+			        // Crear una variable para el sonido de la turbina
+			        const trophySound = new Audio('audio/positive-notification.wav');
+			        
+			        // Cargar el sonido al inicio para evitar el retardo
+			        trophySound.load();
+
+			        // Función para reproducir el sonido
+			        function playTrophySound() {
+			            // Reiniciar el sonido si ya está sonando
+			            trophySound.pause(); // Detener el sonido si ya está sonando
+			            trophySound.currentTime = 0; // Volver al inicio
+			            trophySound.play(); // Reproducir el sonido
+			        }
+
+			        // Obtener los botones y añadir eventos mouseover
+			        const actionButton = document.getElementById('actionButton');
+			        const registerButton = document.getElementById('registerButton');
+			        const accessButton = document.getElementById('accessButton');
+
+			        // Añadir evento mouseover a los botones
+			        actionButton.addEventListener('mouseover', playTrophySound);
+			        registerButton.addEventListener('mouseover', playTrophySound);
+			        accessButton.addEventListener('mouseover', playTrophySound);
+			    </script>
+				<div th:if="${fechaUltimoAcceso != null}">
+					          Fecha de ultimo acceso: <span th:text="${fechaUltimoAcceso}"></span>
+					       </div>
+		</body>
+<html>
+

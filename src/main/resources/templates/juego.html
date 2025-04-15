@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <title>StarStream Eden</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/style/styles.css}">
+	<style>
+	        /* Estilos para el modal */
+	        .modal {
+	            display: none;
+	            position: fixed;
+	            z-index: 1;
+	            left: 0;
+	            top: 0;
+	            width: 100%;
+	            height: 100%;
+	            background-color: rgba(0, 0, 0, 0.7); /* Fondo más oscuro para el modal */
+	            padding-top: 60px;
+	        }
+	        .modal-content {
+	            background-color: #333; /* Fondo oscuro para el contenido del modal */
+	            color: white; /* Texto blanco para mayor visibilidad */
+	            margin: 5% auto;
+	            padding: 20px;
+	            border: 1px solid #888;
+	            width: 80%;
+	            max-width: 800px;
+	            border-radius: 8px;
+	        }
+	        .close {
+	            color: #aaa;
+	            float: right;
+	            font-size: 28px;
+	            font-weight: bold;
+	        }
+	        .close:hover,
+	        .close:focus {
+	            color: white; /* Cambiar color de la "X" a blanco */
+	            text-decoration: none;
+	            cursor: pointer;
+	        }
+	        .game-container {
+	            max-width: 800px;
+	            margin: 0 auto;
+	            background-color: white;
+	            padding: 20px;
+	            border-radius: 8px;
+	            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+	        }
+	        .game-text {
+	            font-size: 18px;
+	            margin-bottom: 20px;
+	        }
+	        .choices {
+				display: flex;
+				      flex-direction: column;
+				      align-items: center; /* Centra los botones */
+				      gap: 10px; /* Espacio entre botones */
+	        }
+	        .choice {
+	            background-color: #4CAF50;
+	            color: white;
+	            padding: 10px;
+	            margin: 10px 0;
+	            border: none;
+	            border-radius: 5px;
+	            cursor: pointer;
+	            font-size: 16px;
+	            display: flex;
+	            align-items: center;
+				width: 80%; /* Ajusta el ancho de los botones */
+				max-width: 400px; /* Límite para que no sean demasiado grandes */
+				text-align: center;
+	        }
+	        .choice img {
+	            margin-right: 10px;
+	            width: 30px;
+	            height: 30px;
+	            object-fit: cover;
+	        }
+	        .choice:hover {
+	            background-color: #45a049;
+	        }
+			.large-image {
+			    width: 300px; /* Ancho fijo de la imagen */
+			    height: auto; /* Mantiene la proporción de la imagen */
+			    margin: 20px 0;
+			    border-radius: 8px;
+			}
+	    </style>
+</head>
+<body>
+	<header class="header-container">
+		<div class="user-container">
+		    <img id="userIcon" th:src="@{/images/usuario.gif}" alt="Usuario" class="user-icon">
+		    
+			<div id="userModal" class="user-modal">
+				<p>Nombre: <span th:text="${alias} ?: 'Usuario'"></span></p>
+				<p>Rol: <span th:text="${rol} ?: 'Sin Rol'"></span></p>
+			</div>
+
+	    </div>
+
+        <div class="title">
+            <span>Bienvenido a</span>
+            <h1>StarStream Eden</h1>
+        </div>
+
+        <nav class="nav-buttons">
+            <a href="/configuracion">Configuración</a>
+            <a href="/logout">Salir</a>
+        </nav>
+    </header>
+
+    <main>
+        <p>Bienvenido, jugador [<span th:text="${alias}"></span>].</p>
+
+        <!-- Botón para abrir el modal con el juego -->
+        <button id="gameButton">Jugar al juego de rol</button>
+
+		<!-- Modal con el juego (inicialmente oculto) -->
+		    <div id="gameModal" class="modal">
+		        <div class="modal-content">
+		            <span class="close" id="closeModal">&times;</span>
+		            <h2>Aventura Épica</h2>
+		            <div id="gameText" class="game-text"></div>
+		            <img id="gameImage" class="large-image" src="" alt="Imagen de la aventura">
+		            <div id="choices" class="choices"></div>
+		        </div>
+		    </div>
+		</main>
+
+    <footer>
+        <div class="social-icons">
+            <a href="http://www.instagram.com/StarStreamEden" target="_blank"><i class="fa-brands fa-instagram"></i></a> 
+            <a href="http://www.facebook.com/StarStreamEden" target="_blank"><i class="fa-brands fa-facebook"></i></a> 
+            <a href="http://www.linkedin.com/StarStreamEden" target="_blank"><i class="fa-brands fa-linkedin"></i></a> 
+        </div>
+        <p>Copyright 2025 - @lp4elements</p>
+    </footer>
+
+    <script>
+		let misionesMostradas = [];  // Array para almacenar las misiones ya mostradas
+
+		function cargarMisionAleatoria() {
+		    const misiones = ['/js/mision1.js', '/js/mision2.js', '/js/mision3.js', '/js/mision4.js', '/js/mision5.js', '/js/mision6.js', '/js/mision7.js', '/js/mision8.js']; // Lista de misiones disponibles
+
+		    // Filtramos las misiones que no se han mostrado
+		    const misionesDisponibles = misiones.filter(mision => !misionesMostradas.includes(mision));
+
+		    if (misionesDisponibles.length === 0) {
+		        // Si ya se han mostrado todas las misiones, reiniciamos la lista
+		        misionesMostradas = [];
+		    }
+
+		    // Elegir una misión aleatoria de las disponibles
+		    const misionAleatoria = misionesDisponibles[Math.floor(Math.random() * misionesDisponibles.length)];
+
+		    misionesMostradas.push(misionAleatoria);  // Agregamos la nueva misión al arreglo de misiones mostradas
+
+		    console.log("Cargando misión:", misionAleatoria);  // Depuración
+
+		    // Cargar el archivo JS seleccionado dinámicamente
+		    const script = document.createElement('script');
+		    script.src = misionAleatoria;
+		    script.onload = function() {
+		        console.log("Misión cargada con éxito:", misionAleatoria);  // Depuración
+
+		        // Aquí se actualiza el título con el nombre de la misión
+		        document.querySelector("h2").innerText = missionName;  // Actualiza el título en el modal
+
+		        updateGameState('start');  // Llamar al estado inicial después de cargar la misión
+		    };
+		    script.onerror = function() {
+		        console.error("Error al cargar el script:", misionAleatoria);  // Depuración
+		    };
+
+		    document.head.appendChild(script);  // Agregar el script al documento
+		}
+
+
+		// Variables del modal
+		var modal = document.getElementById("gameModal");
+		var btn = document.getElementById("gameButton");
+		var span = document.getElementById("closeModal");
+
+		// Al hacer clic en el botón, se muestra el modal y se carga una misión aleatoria
+		btn.onclick = function() {
+		    modal.style.display = "block";
+		    cargarMisionAleatoria(); // Cargar una misión aleatoria
+		}
+
+		// Al hacer clic en el 'X' del modal, se cierra
+		span.onclick = function() {
+		    modal.style.display = "none";
+		}
+
+		// Si el usuario hace clic fuera del modal, también lo cierra
+		window.onclick = function(event) {
+		    if (event.target == modal) {
+		        modal.style.display = "none";
+		    }
+		}
+
+       
+        // Función para actualizar el juego
+        function updateGameState(state) {
+            const gameText = document.getElementById("gameText");
+            const gameImage = document.getElementById("gameImage");
+            const choices = document.getElementById("choices");
+
+            gameText.innerHTML = gameData[state].text;
+            gameImage.src = gameData[state].imageLarge;
+
+            // Limpiar las opciones anteriores
+            choices.innerHTML = '';
+
+            // Crear nuevas opciones
+            gameData[state].choices.forEach(choice => {
+                let button = document.createElement("button");
+                button.className = "choice";
+                button.innerHTML = `<img src="${choice.image}" alt="${choice.text}"> ${choice.text}`;
+                button.onclick = function() {
+                    updateGameState(choice.next);
+                };
+                choices.appendChild(button);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0.9) 0%, rgba(0,0,50,0.8) 100%);
+            color: #fff;
+        }
+        header {
+            background-color: #1d1d2a;
+            color: #f4f4f4;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+        }
+        nav {
+            background: linear-gradient(135deg, rgba(45, 50, 55, 0.9), rgba(25, 30, 35, 0.9));
+            width: 220px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 20px;
+            box-shadow: 4px 0 10px rgba(255, 255, 255, 0.2);
+        }
+        nav a {
+            display: block;
+            padding: 12px;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 15px;
+            transition: background-color 0.3s;
+        }
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+        }
+        .container {
+            margin-left: 240px;
+            padding: 30px;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .card {
+            background: rgba(45, 50, 55, 0.8);
+            padding: 25px;
+            margin: 10px;
+            width: 30%;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #00b3b3;
+            text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.3);
+        }
+        .btn {
+            background: linear-gradient(45deg, #00b3b3, #008080);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0, 255, 255, 0.4);
+            transition: all 0.4s ease;
+        }
+        .btn:hover {
+            background: linear-gradient(45deg, #008080, #00b3b3);
+            box-shadow: 0 6px 15px rgba(0, 255, 255, 0.5);
+            transform: scale(1.1);
+        }
+        .btn-danger {
+            background: linear-gradient(45deg, #ff4d4d, #ff0000);
+            box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3);
+        }
+        .btn-danger:hover {
+            background: linear-gradient(45deg, #ff0000, #ff4d4d);
+            box-shadow: 0 6px 15px rgba(255, 0, 0, 0.5);
+            transform: scale(1.1);
+        }
+        footer {
+            background-color: #1d1d2a;
+            color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            box-shadow: 0 -4px 8px rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Panel de Administración</h1>
+</header>
+
+<nav>
+    <a th:href="@{/index}">Inicio</a>
+    <a th:href="@{/admin/usuarios}">Usuarios</a>
+    <a href="#">Configuraciones</a>
+    <a href="#">Reportes</a>
+    <a th:href="@{/logout}">Cerrar sesión</a>
+</nav>
+
+<div class="container">
+    <div class="dashboard">
+        <div class="card">
+            <h3>Estadísticas</h3>
+            <p>Total de usuarios: 120</p>
+            <p>Total de flotas: 120</p>
+        </div>
+        <div class="card">
+            <h3>Acciones</h3>
+            <a href="#" class="btn">Añadir Usuario</a>
+            <a href="#" class="btn btn-danger">Eliminar Usuario</a>
+        </div>
+        <div class="card">
+            <h3>Últimos Reportes</h3>
+            <p><strong>Reporte 1:</strong> Informe de usuarios</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 Panel de Administración</p>
+</footer>
+
+</body>
+</html>
+
